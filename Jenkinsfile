@@ -1,28 +1,37 @@
-pipeline{
+pipeline {
     agent any
     environment {
-     NEW_VERSION = '1.3.0'
+        NEW_VERSION = '1.3.0'
     }
-    stages{
-        stage("build"){
+    stages {
+        stage("build") {
             steps {
-              echo 'Building the application....'
-              echo "Building version ${NEW_VERSION}"
-              bat 'mvn clean package -DskipTests=false'
+                echo "Building version ${NEW_VERSION}"
+                bat 'mvn clean package -DskipTests=false'
             }
         }
-         stage("test") {
-             steps {
-                 echo 'Testing the application.. SUCCESS'
-             }
-         }
+        stage("test") {
+            steps {
+                echo 'Testing the application.. SUCCESS'
+            }
+        }
     }
 
     post {
+        failure {
+            script {
+                if (env.CHANGE_ID) {
+                    pullRequest.comment("❌ Build failed for commit ${env.GIT_COMMIT}.\n\n[View Jenkins logs](${env.BUILD_URL})")
+                }
+            }
+        }
         always {
-            publishChecks name: 'Jenkins Build',
-                    summary: 'Build result',
-                    conclusion: currentBuild.currentResult
+            script {
+                def conclusion = (currentBuild.currentResult == 'SUCCESS') ? 'SUCCESS' : 'FAILURE'
+                publishChecks name: 'Jenkins Build',
+                        summary: 'Build result',
+                        conclusion: conclusion
+            }
         }
     }
 }
