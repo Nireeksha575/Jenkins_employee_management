@@ -17,4 +17,12 @@ pipeline{
              }
          }
     }
+
+    post {
+        always {
+            publishChecks name: 'Jenkins Build',
+                    summary: 'Build result',
+                    conclusion: currentBuild.currentResult
+        }
+    }
 }
