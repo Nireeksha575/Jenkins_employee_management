@@ -13,6 +13,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 @ExtendWith(MockitoExtension.class)
 public class EmployeeServiceTest {
     @Mock
@@ -43,7 +45,7 @@ public class EmployeeServiceTest {
 
         Mockito.when(repo.save(employee)).thenReturn(employee);
         Employee addedEmployee=service.addEmployee(employee);
-        Assertions.assertEquals(employee.getId(),addedEmployee.getId());
+        assertEquals(employee.getId(),addedEmployee.getId());
 
     }
 
@@ -53,7 +55,7 @@ public class EmployeeServiceTest {
         employee.setName("");
         RuntimeException exception=Assertions.assertThrows(RuntimeException.class,()->
                 service.addEmployee(employee));
-        Assertions.assertEquals("Invalid Employee Name",exception.getMessage());
+        assertEquals("Invalid Employee Name",exception.getMessage());
         Mockito.verify(repo,Mockito.never()).save(employee);
     }
 
@@ -78,6 +80,11 @@ public class EmployeeServiceTest {
         validName.setAccessible(true);
         Boolean name= (Boolean) validName.invoke(service,"");
         Assertions.assertFalse(name);
+    }
+
+    @Test
+    void testDummyFailure() {
+        assertEquals(2, 1 + 1 - 1); // deliberately wrong, will fail
     }
 
     @AfterEach
