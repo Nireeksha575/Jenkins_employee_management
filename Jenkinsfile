@@ -12,8 +12,7 @@ pipeline {
         }
         stage("test") {
             steps {
-                echo 'Testing the application.. SUCCESS'
-                echo 'SUCCESS...'
+                echo 'Testing the application.... SUCCESS'
             }
         }
     }
@@ -22,7 +21,15 @@ pipeline {
         failure {
             script {
                 if (env.CHANGE_ID) {
-                    pullRequest.comment("❌ Build failed for commit ${env.GIT_COMMIT}.\n\n[View Jenkins logs](${env.BUILD_URL})")
+                    withCredentials([usernamePassword(credentialsId: 'github-app-employee-mgmt', usernameVariable: 'GH_APP', passwordVariable: 'GH_TOKEN')]) {
+                        bat """
+                    curl -s -X POST ^
+                      -H "Authorization: token %GH_TOKEN%" ^
+                      -H "Accept: application/vnd.github+json" ^
+                      https://api.github.com/repos/Nireeksha575/Jenkins_employee_management/issues/${env.CHANGE_ID}/comments ^
+                      -d "{\\"body\\": \\"Build failed for commit ${env.GIT_COMMIT}. View logs: ${env.BUILD_URL}\\"}"
+                    """
+                    }
                 }
             }
         }
