@@ -75,7 +75,7 @@ public class EmployeeController {
         }else {
             sort=Sort.by(sortBy).descending();
         }
-       return service.fetchEmployees(PageRequest.of(page-1, size,sort),search);
+       return service.fetchEmployees(PageRequest.of(page, size,sort),search);
     }
 
 }
