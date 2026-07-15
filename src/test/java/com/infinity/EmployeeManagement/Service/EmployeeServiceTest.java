@@ -84,7 +84,7 @@ public class EmployeeServiceTest {
 
     @Test
     void testDummyFailure() {
-        assertEquals(2, 1 + 1 - 1); // deliberately wrong, will fail
+        assertEquals(2, 1 + 1 - 1);
     }
 
     @AfterEach
