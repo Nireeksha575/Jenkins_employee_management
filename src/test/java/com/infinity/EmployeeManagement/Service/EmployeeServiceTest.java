@@ -82,10 +82,10 @@ public class EmployeeServiceTest {
         Assertions.assertFalse(name);
     }
 
-//    @Test
-//    void testDummyFailure() {
-//        assertEquals(2, 1 + 1 - 1);
-//    }
+    @Test
+    void testDummyFailure() {
+        assertEquals(2, 1 + 1 - 1);
+    }
 
     @AfterEach
     void cleanUp(){
